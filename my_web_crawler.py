@@ -1,7 +1,7 @@
 #crawl web https://www.udacity.com/cs101x/index.html
 
 import urllib
-
+import time
 #1) get the urls of a web page
 
 def geturls(url):              # get the first/next link in source code of variable "page"
@@ -18,32 +18,36 @@ def geturls(url):              # get the first/next link in source code of varia
     return linklist
 
 
-def crawl_the_web(url):    
-    
-    to_crawl = [url]
-    
+def crawl_the_web(url,max_pages):    
+
+    start_time = time.time()  # Check execution time of this program
+
+    to_crawl = [url]            
     final_list_of_crawled_urls = []
-    while to_crawl:
-        
-        url = to_crawl.pop()
-        linklist = geturls(url)
 
-        for link in linklist:
-            if link not in final_list_of_crawled_urls:
-                final_list_of_crawled_urls.append(link)
-                print final_list_of_crawled_urls
-            else:
-                 linklist.remove(link)
+    while to_crawl:           # while this list is not empty  
 
-        for link in linklist:
-            to_crawl.append(link)
+         if len(final_list_of_crawled_urls) < max_pages:    
+            url = to_crawl.pop()
+            linklist = geturls(url)
 
-    return final_list_of_crawled_urls
+            for link in linklist:
+                if link not in final_list_of_crawled_urls :
+                    final_list_of_crawled_urls.append(link)
+                else:
+                     linklist.remove(link)              # dont store duplicates
 
-print crawl_the_web("http://www.yahoo.com")        
+            for link in linklist:
+                to_crawl.append(link)                   # any new links found, go and crawl them
+         else:
+             break
+    
+    print("--- %s seconds ---" % (time.time() - start_time)) # execution time
+            
+    return (final_list_of_crawled_urls)
 
+print crawl_the_web("http://www.reddit.com",40)        
 
-
-   
+  
 
 
